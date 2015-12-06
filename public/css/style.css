@@ -1,11 +1,28 @@
- body {
+	body {
   	text-align: center;
-  	background-color: beige;
+  	background-color: #dddfd4;
+  	color: #173e43;
+	}
+	iframe {
+  	border-width: 2px;
+  	border-right-style: none;
+  	border-left-style: none;
+  	border-color: #173e43;
 
-  }
-  iframe {
-  	border-width: 3px;
-  	border-color:; gray;
+  	background-color: #3fb0ac;
+
   	display: block;
-  	margin: 0 auto;
+  	margin: 0;
+  }
+
+  select {
+  	border-radius: 4px;
+  	height: 37px;
+  	font-size: 1.3rem;
+  }
+  select:hover {
+  	box-shadow: 0px 0px 30px 0px #173e43;
+  }
+  option {
+  	background-color: #dddfd4;
   }

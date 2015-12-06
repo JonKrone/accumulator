@@ -22,8 +22,13 @@ app.get('/projectlist', function(request, response) {
 	var fileList = findFiles("public/projects/");
 
 	response.send(fileList);
-	// console.log(request);
-	console.log("We've triggered app.get/projects");
+});
+
+app.get('/projects', function(request, response) {
+	var projectLink = decodeURIComponent(request.url);
+	projectLink = projectLink.substring(projectLink.indexOf("?") + 1);
+
+	response.sendFile(projectLink, {root: __dirname});
 });
 
 app.listen(app.get('port'), function() {
@@ -55,7 +60,7 @@ function findFiles(pathRoot) {
 			findFiles(filename);
 		else {
 			// console.log("filename:", filename);
-			projectFiles.push(filename);
+			if (projectFiles.indexOf(filename) == -1) projectFiles.push(filename);
 		}
 	}
 

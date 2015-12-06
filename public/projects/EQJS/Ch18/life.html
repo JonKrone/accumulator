@@ -17,7 +17,10 @@
 		body {
 			text-align: center;
 		}
-		checkbox {}
+		input {
+			margin: 2px 2px 2px 4px;
+			color: black;
+		}
 	</style>
 <body>
 
@@ -47,6 +50,7 @@
 				var box = document.createElement("input");
 				box.type = "checkbox";
 				box.checked = Math.random() < 0.3;
+				box.class = "unit";
 
 				box.x = j;
 				box.y = i;
@@ -120,10 +124,12 @@
 
 
 
-	var btn = document.getElementById("next");
-	btn.addEventListener("click", function() {
+	var roll = document.getElementById("next");
+	roll.addEventListener("click", function() {
 		nextGeneration();
 	});
+
+	var 
 
 
 	// Let 'er run

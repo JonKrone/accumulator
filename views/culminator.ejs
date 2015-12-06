@@ -3,29 +3,30 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Work Access</title>
+	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+	<h1>Which project would you like to view?</h1>
+
 
 <form>
-	<label>Which project would you like to view? bg-color:gray  </label><select id="selector">
-		<option value="background br test" style="background:#e822fe">OPtion1</option>
-		<option>OPtion2</option>
-	</select>
-	<input id="html" type="radio" name="html" value="HTML">
-	<input id="js" type="radio" name="js" value="JavaScript">
-	<input type="button" onSubmit="loadCurrentFile()" value="Change View">
+	<select id="selector"></select>
+<!-- 	<input id="html" type="radio" name="html" value="HTML" text="HTML">
+	<input id="js" type="radio" name="js" value="JavaScript" text="HTML"> -->
 </form>
 
 <br>
 <iframe
 	id="page"
-	width="90%" height="500" sandbox="allow-scripts">
+	width="100%" height="1000px"
+	> <!-- Doing what we were told never to do sandbox="allow-scripts allow-same-origin"
+				  google onload="resizeFrame(this)" iframe to dynamically size -->
 	<p>
 		For some reason our file could not display but you may be able to find it here.
 	</p>
 </iframe>
 
-<script>
+<script type="text/javascript">
 	var htmlRadio = document.getElementById("html");
 	var jsRadio = document.getElementById("js")
 	var iframe = document.getElementById("page");
@@ -41,7 +42,17 @@
 				throw new Error("Failed to load projects list");
 			}
 			else {
-				console.log("RESPONSE TEXT:", request.responseText);
+				var fileList = [];
+				request.responseText.split(",").forEach(function(file) {
+					fileList.push(file.replace(/"|\[|]/g, ""));
+				})
+
+				for (var i = 0; i < fileList.length; i++) {
+					var option = document.createElement("option");
+					option.value = option.text = fileList[i];
+					option.setAttribute("data-path", fileList[i]);
+					fileSelector.appendChild(option);
+				}
 			}
 		});
 		request.addEventListener("error", function() {
@@ -52,43 +63,52 @@
 	populateSelector();
 
 
-// function request(options, callback) {
-// 	var req = new XMLHttpRequest();
-// 	req.open(options.method || "GET", options.filename, true);
+	function request(options, callback) {
+		var req = new XMLHttpRequest();
+		var params = encodeURIComponent(options.filename);
+		console.log(params);
+		req.open(options.method || "GET", options.url + "?" + params, true);
 
-// 	req.addEventListener("load", function() {
-// 		if (req.status < 400)
-// 			callback(null, req.responseText);
-// 		else
-// 			callback(new Error("Request failed: " req.statusText));
-// 	});
-// 	req.addEventListener("error", function() {
-// 		callback(new Error("Network error"));
-// 	});
-// 	req.send(options.body || null);
-// }
+		req.addEventListener("load", function() {
+			if (req.status < 400)
+				callback(null, req.responseText);
+			else
+				callback(new Error("Request failed: " + req.statusText));
+		});
+		req.addEventListener("error", function() {
+			callback(new Error("Network error"));
+		});
+		req.send();
+	}
 
 
 	function loadCurrentFile() {
-		request({filename: fileSelector.value}, function(error, file) {
-			if (error) throw error;
-			
-			iframe.src = file;
+		var req = new XMLHttpRequest();
+		var encodedFilePath = encodeURIComponent(fileSelector.value);
+		req.open("GET", "/projects" + "?" + encodedFilePath, true);
+
+		req.addEventListener("load", function() {
+			if (req.status >= 400)
+				throw new Error("Mistake loading project file.\n" + req.statusText);
+			else {
+				iframe.contentWindow.document.open();
+				iframe.contentWindow.document.write(req.responseText);
+			}
 		});
+		req.addEventListener("error", function() {
+			throw new Error("Network error");
+		});
+		req.send();
 	}
 	fileSelector.addEventListener("change", loadCurrentFile); // might need to be positioned below loadCurrentFie function definition
 
 
-
-//  Make HTML GET request, with checkbox status, to populate select box.
 //	if GETrequest.contains(selector) return fileList.
 //	if ChangeView button.submitted return iframe.src = fileList.currentFile
 //
 // 
 //
 </script>
-
-<!-- <script src="project_viewer.js"></script> -->
 
 <!--
 A viewer for all of the webpages I have made.
