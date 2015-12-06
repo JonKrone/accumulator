@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+	<style>
+		button {
+			background: darkCyan;
+			color: orange;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		pre {
+			text-align: center;
+			background-color: #249480;
+		}
+	</style>
+<body>
+
+<div style="text-align: center"><button id="convert">
+ Send commands for verification and execution </button></div><br>
+<textarea id="params" style="width: 30%; height: 100px; margin: 8px;">
+Are there any parameters required for your command?</textarea>
+<textarea id="script" style="width: 60%; height: 100px; margin: 8px;">Input commands here, commander.</textarea>
+<div style="cursor: pointer; text-align: right;">
+	<div style="margin: 3px;">We will provide suggestions as you write.</div>
+	<div id="suggestions" style="text-align: left; display: inline-block; width: 45%; margin: 2px;"></div>
+</div>
+
+
+<pre id="output"> Response will appear here, commander </pre>
+
+<script>
+	var btn = document.getElementById("convert");
+	var parameter = document.getElementById("params");
+	var body = document.getElementById("script");
+	var pre = document.getElementById("output");
+	var script = "";
+
+	btn.addEventListener('click', function(e) {
+		script = body.value;
+		console.log(script);
+		params = parameter.value;
+		try {
+			/*jslint evil: true */
+			var cmd = new Function(params, script);
+			pre.textContent = cmd();
+			flashPre();
+		} catch (err) {
+			console.log("Command not valid. Here's why, ya deefus." + err);
+		}
+	});
+
+	function flashPre() {
+		pre.style.backgroundColor = "orange";
+
+		if (pre.textContent === "")
+			pre.textContent = "Did you mean to receive a response?";
+
+		setTimeout(function() {
+			pre.style.backgroundColor = "beige";
+		}, 150);
+	}
+</script>
+
+<script>
+	// Global names for our dictionary
+	var terms = [];
+	for (var name in window) {
+		if (terms.indexOf(name) == -1)
+		terms.push(name);
+	}
+
+	var body = document.getElementById("script");
+	var suggBody = document.getElementById("suggestions");
+	var suggs = [];
+
+	body.addEventListener('keydown', function() {
+		var script = body.value.split(/[\s.]/);
+		workingWord = script[script.length - 1];	
+		populateSuggestions(suggestions(workingWord));
+	});
+	// We receive updates a character behind. I think that the eventListener is called before the keydown
+	// inserts a char into the script body. Can we tell the event to propogate before finishing our event
+	// listener? Call populate suggestions after a timeout (nope - tried)?
+
+	function populateSuggestions(suggestions) {
+		// removing all children
+		while (suggBody.firstChild)
+			suggBody.removeChild(suggBody.firstChild);
+
+
+		for (var i = 0; i < suggestions.length; i++) {
+			var li = document.createElement("li");
+			li.textContent = suggestions[i];
+			suggBody.appendChild(li);
+		}
+
+		console.log("---------Populationed--------");
+	}
+
+	function suggestions(word) {
+		var suggestions = terms.filter(function(term) {
+			if (term.includes(word)) {
+				return true;
+			}
+		});
+		return suggestions.slice(0, 10);
+	}
+
+</script>
+</body>
+</html>

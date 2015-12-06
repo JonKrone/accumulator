@@ -1,0 +1,17 @@
+{
+  "name": "culminator",
+  "version": "5.0.0",
+  "description": "Server aggregating my NodeJS projects",
+  "main": "project_viewer.js",
+  "dependencies": {
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "fs": "^0.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jonathan Krone <jkrone@vt.edu>",
+  "license": "ISC"
+}

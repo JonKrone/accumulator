@@ -1,0 +1,11 @@
+ body {
+  	text-align: center;
+  	background-color: beige;
+
+  }
+  iframe {
+  	border-width: 3px;
+  	border-color:; gray;
+  	display: block;
+  	margin: 0 auto;
+  }

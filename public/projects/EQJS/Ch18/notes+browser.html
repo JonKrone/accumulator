@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+	<style>
+		body {
+			text-align: center;
+		}
+	</style>
+<body>
+
+<p><input type="text" value="abs" tabindex=1> (text)</p>
+<p><input type="password" value="abs" tabindex=2> (password)</p>
+<p><input id="boxed" type="checkbox" checked tabindex=3>
+		<label for="boxed" style="color: mediumpurple">Purple Page Processor</label></p>
+<p><input type="radio" value="A" name="choice" tabindex=4>
+	 <input type="radio" value="B" name="choice" checked tabindex=5>
+	 <input id="rightRadio" type="radio" value="C" name="choice" tabindex=6> (radios)</p>
+<p><input id="upload" type="file" tabindex=7 disabled="true"> (file load)</p>
+
+<select autofocus tabindex=8 multiple size=2>
+	<option>Fried ice cream</option>
+	<option>Breaded jello</option>
+	<option>Cutcakes</option>
+	<option>Sparkles</option>
+	<option>Regret</option>
+</select>
+
+<script>
+	var active = document.querySelector("input");
+	active.focus();
+	console.log(document.activeElement.value);
+	active.blur();
+	console.log(document.activeElement.tagName);
+
+	// Disabling some fieeeeeelds on other input. Hah, what about a game that has intricately interconnected
+	// fields that you need to untangle to enable a 'next level' button
+	var rightRadio = document.getElementById("rightRadio");
+	var uploader = document.getElementById("upload");
+	addEventListener('click', function(e) {
+		if (rightRadio.checked)
+			uploader.disabled = false;
+		else if (!rightRadio.checked)
+			uploader.disabled = true;
+	});
+</script>
+
+<script>
+	// Promise based file read - fun! Snippet material (maybe? Not sure about invulnerability, but good
+	// processes)
+	var input = document.querySelector("#upload");
+	input.addEventListener("change", function(e) {
+		Array.prototype.forEach.call(input.files, function(file) {
+			readFile(file).then(function(res) {
+				console.log("Head of file:", res.slice(0, 25));
+			}, function(err) {
+			console.log("Encountered Error loading file: ", err);
+			});
+		});
+	});
+
+	function readFile(file) {
+		return new Promise(function(succeed, fail) {
+			var reader = new FileReader();
+			reader.addEventListener("load", function(e) {
+				succeed(reader.result);
+			});
+			reader.addEventListener("error", function(e) {
+				fail(reader.error);
+			});
+			reader.readAsText(file);
+		});
+	}
+</script>
+
+<p></p>
+<form id="miter" action="NaJSf.js">
+	Name: <input type="text" name="name"><br><p></p>
+	Password: <input type="password" name="password"><br><p></p>
+	<button type="submit">whatever</button>
+</form>
+<script>
+ 	var form = document.getElementById("miter");
+
+ 	form.addEventListener("submit", function(e) {
+ 		console.log("saving values", form.elements.value.value);
+ 		e.preventDefault();
+ 	});
+
+ 	console.log(form.elements[1].type);
+ 	console.log(form.elements.password.type);
+ 	console.log("name.form == form", form.elements.name.form == form);
+ 	console.log("form.elements.name:", form.elements.name);
+</script>
+
+<p></p>
+<p>Select some words and press 'k'</p>
+<textarea id="khasekhemwy">Hey boys! Let's go pick up girls!</textarea>
+<span id="length"></span>
+<script>
+	var textArea = document.getElementById("khasekhemwy");
+	textArea.addEventListener('keydown', function(e) {
+		if (e.keyCode == 75) {
+			console.log("replacing");
+			replaceSelection(textarea, "Khasekhemwy");
+			e.preventDefault();
+		}
+	});
+	function replaceSelection(field, word) {
+		var from = field.selectionStart, to = field.selectionEnd;
+		field.value = field.value.slice(0, from) + word + field.value.slice(to);
+		field.selectionStart = field.selectionEnd = from + word.length;
+	}
+
+	var numChars = document.getElementById("length");
+	numChars.textContent = " " + textArea.value.length + " CHARACTERS";
+	textArea.addEventListener('input', function(e) {
+		numChars.textContent = " " + textArea.value.length + " CHARACTERS";
+	});
+
+	var boxed = document.getElementById("boxed");
+	boxed.addEventListener('change', function(e) {
+		document.body.style.background = boxed.checked ? "mediumpurple" : "";
+	});
+</script>
+
+<select id="binbin" multiple>
+  <option value="1">0001</option>
+  <option value="2">0010</option>
+  <option value="4">0100</option>
+  <option value="8">1000</option>
+</select> = <span id="output">0</span>
+<script>
+var select = document.querySelector("#binbin");
+var output = document.querySelector("#output");
+select.addEventListener("change", function() {
+	var n = 0;
+	for (var i = 0; i < select.options.length; i++) {
+		var option = select.options[i];
+		if (option.selected)
+			n += Number(option.value);
+	}
+	output.textContent = n;
+});
+</script>
+
+
+<script>
+	// Using localStorage - cache?*?
+	localStorage.setItem("username", "SpaceCowboy");
+	console.log(localStorage.getItem("username"));
+	localStorage.removeItem("username");
+</script>
+
+</body>
+</html>

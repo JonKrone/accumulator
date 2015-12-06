@@ -1,0 +1,137 @@
+<!doctype html>
+<!--
+
+
+ Any live cell with fewer than two or more than three live neighbors dies.
+
+ Any live cell with two or three live neighbors lives on to the next generation.
+
+ Any dead cell with exactly three live neighbors becomes a live cell.
+
+
+
+-->
+<html>
+	<style>
+		div {}
+		body {
+			text-align: center;
+		}
+		checkbox {}
+	</style>
+<body>
+
+<div id="grid"></div>
+<button id="next">Roll the dice</button>
+
+
+<script>
+	var boxes = [];
+
+	var directions = [
+		[-1, -1], [0, -1], [1, -1],
+		[-1, 0],           [1, 0],
+		[-1, 1],  [0, 1],  [1, 1]
+	];
+	console.log(directions);
+
+
+	function generateWorld(size) {
+		// We are populating our world with randomly checked boxes. They are stored in a one dimensional
+		// array, which may or may not be more convenient, but given x, y value pairs to help us work with
+		// them as coordinates.
+		var grid = document.getElementById("grid");
+		for (var i = 0; i < size; i++) {
+			var row = document.createElement("div");
+			for (var j = 0; j < size; j++) {
+				var box = document.createElement("input");
+				box.type = "checkbox";
+				box.checked = Math.random() < 0.3;
+
+				box.x = j;
+				box.y = i;
+				boxes[i * size + j] = box;
+				row.appendChild(box);
+			}
+			grid.appendChild(row);
+		}
+	}
+
+	// Runs through the board testing all boxes for their state next cycle.
+	function nextGeneration() {
+		var nextGen = [];
+		var size = Math.sqrt(boxes.length);
+
+		for (var i = 0; i < size; i++) {
+			for (var j = 0; j < size; j++) {
+				var thisBox = boxAt(j, i);
+				var buds = neighbors(thisBox);
+				
+				// checking our checked neighbor count.
+				var friendsAlive = 0;
+				for (var k = 0; k < buds.length; k++) {
+					if (buds[k].checked) friendsAlive++;
+				}
+
+				// Setting our nextGen boolean array to a false or true if there is a change in state.
+				// if a box has 1, 0, or 4+ neighbors, you die.
+				// if a live box has 2 or 3 neighbors, it stays alive (but doesn't require a rule)
+				// if a box has 3 neighbors it is born again.
+				if (friendsAlive < 2 || friendsAlive > 3) nextGen[i * size + j] = false;
+				else if (friendsAlive == 3) nextGen[i * size + j] = true;
+			}
+		}
+		populateGrid(nextGen);
+	}
+
+	function populateGrid(states) {
+		var size = Math.sqrt(boxes.length);
+
+		for (var i = 0; i < size; i++) {
+			for (var j = 0; j < size; j++) {
+				var index = i * size + j;
+				if (states[index] === undefined) continue;
+
+				boxes[index].checked = states[index];
+			}
+		}
+	}
+
+	function neighbors(ofBox) {
+		var neighbors = [];
+		for (var i = 0; i < directions.length; i++) {
+			var neighbor = boxAt(ofBox.x + directions[i][0],
+													 ofBox.y + directions[i][1]);
+			if (neighbor === null) continue;
+			neighbors.push(neighbor);
+		}
+		return neighbors;
+	}
+
+	function boxAt(x, y) {
+		// access our 1-d array with 2-d representation. sqrt of boxes.length provides the
+		// length of a side of our world. We're also checking for out-of-bounds problems.
+		var size = Math.sqrt(boxes.length);
+		if (x > size - 1 || x < 0 || y > size - 1 || y < 0)
+			return null;
+
+		return boxes[x * size + y];
+	}
+
+
+
+	var btn = document.getElementById("next");
+	btn.addEventListener("click", function() {
+		nextGeneration();
+	});
+
+
+	// Let 'er run
+	generateWorld(40);
+</script>
+
+
+
+
+</body>
+</html>

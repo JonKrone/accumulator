@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Work Access</title>
+</head>
+<body>
+
+<form>
+	<label>Which project would you like to view? bg-color:gray  </label><select id="selector">
+		<option value="background br test" style="background:#e822fe">OPtion1</option>
+		<option>OPtion2</option>
+	</select>
+	<input id="html" type="radio" name="html" value="HTML">
+	<input id="js" type="radio" name="js" value="JavaScript">
+	<input type="button" onSubmit="loadCurrentFile()" value="Change View">
+</form>
+
+<br>
+<iframe
+	id="page"
+	width="90%" height="500" sandbox="allow-scripts">
+	<p>
+		For some reason our file could not display but you may be able to find it here.
+	</p>
+</iframe>
+
+<script>
+	var htmlRadio = document.getElementById("html");
+	var jsRadio = document.getElementById("js")
+	var iframe = document.getElementById("page");
+	var fileSelector = document.getElementById("selector");
+
+	function populateSelector() {
+		var request = new XMLHttpRequest();
+		request.open("GET", "projectList/", true);
+
+		request.addEventListener("load", function() {
+			if (request.status >= 400) {
+				console.log(request.status);
+				throw new Error("Failed to load projects list");
+			}
+			else {
+				console.log("RESPONSE TEXT:", request.responseText);
+			}
+		});
+		request.addEventListener("error", function() {
+			throw new Error("Network error");
+		});
+		request.send();
+	}
+	populateSelector();
+
+
+// function request(options, callback) {
+// 	var req = new XMLHttpRequest();
+// 	req.open(options.method || "GET", options.filename, true);
+
+// 	req.addEventListener("load", function() {
+// 		if (req.status < 400)
+// 			callback(null, req.responseText);
+// 		else
+// 			callback(new Error("Request failed: " req.statusText));
+// 	});
+// 	req.addEventListener("error", function() {
+// 		callback(new Error("Network error"));
+// 	});
+// 	req.send(options.body || null);
+// }
+
+
+	function loadCurrentFile() {
+		request({filename: fileSelector.value}, function(error, file) {
+			if (error) throw error;
+			
+			iframe.src = file;
+		});
+	}
+	fileSelector.addEventListener("change", loadCurrentFile); // might need to be positioned below loadCurrentFie function definition
+
+
+
+//  Make HTML GET request, with checkbox status, to populate select box.
+//	if GETrequest.contains(selector) return fileList.
+//	if ChangeView button.submitted return iframe.src = fileList.currentFile
+//
+// 
+//
+</script>
+
+<!-- <script src="project_viewer.js"></script> -->
+
+<!--
+A viewer for all of the webpages I have made.
+	Selector for the file
+	Tabs
+		html
+		css
+		console output (always visible?)
+
+-->
+
+</body>
+</html>
