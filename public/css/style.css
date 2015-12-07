@@ -25,8 +25,11 @@
   }
 
   #selector {
-  	border-radius: 4px;
   	height: 37px;
+  	border-radius: 4px;
+
+  	text-align: center;
+
   	font-size: 1.3rem;
   }
   #selector:hover {

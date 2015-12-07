@@ -10,7 +10,9 @@
 
 
 <form>
-	<select id="selector"></select>
+	<select id="selector">
+		<option selected="selected"><--- Select ---></option>
+	</select>
 <!-- 	<input id="html" type="radio" name="html" value="HTML" text="HTML">
 	<input id="js" type="radio" name="js" value="JavaScript" text="HTML"> -->
 </form>
@@ -108,6 +110,7 @@
 	fileSelector.addEventListener("change", function() {
 		loadCurrentFile();
 		document.getElementById("iframeFile").textContent = fileSelector.value;
+		document.getElementById("page").focus();
 	});
 
 </script>
