@@ -1,6 +1,16 @@
-Notes: <select id="list"></select>
-<button onclick="addNote()">Store Note</button><br>
+<style>
+button {
+	border-radius: 2px;
+}
+select {
+	border-radius: 2px;
+}
+
+</style>
+
+Notes: <select id="list"></select><br>
 <textarea id="currentNote" style="width: 90%; height: 10rem; margin: 3px"></textarea>
+<br><button onclick="addNote()">Store Note</button>
 <button onclick="clearStorage()" style="align: right"> Clear All Notes </button>
 
 <script>

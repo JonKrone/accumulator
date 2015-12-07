@@ -18,19 +18,24 @@
 <div style="text-align: center"><button id="convert">
  Send commands for verification and execution </button></div><br>
 <textarea id="params" style="width: 30%; height: 100px; margin: 8px;">
-Are there any parameters required for your command?</textarea>
-<textarea id="script" style="width: 60%; height: 100px; margin: 8px;">Input commands here, commander.</textarea>
+Any tidbits required for your command?</textarea>
+<textarea id="script" style="width: 60%; height: 100px; margin: 8px;">
+	Clear the parameter box and input your commands here, commander.
+
+	We can only work with defined values and don't forget to return, like so:
+
+	return Math.sqrt(5362707 / 3);
+	</textarea>
 <div style="cursor: pointer; text-align: right;">
 	<div style="margin: 3px;">We will provide suggestions as you write.</div>
 	<div id="suggestions" style="text-align: left; display: inline-block; width: 45%; margin: 2px;"></div>
 </div>
 
-
 <pre id="output"> Response will appear here, commander </pre>
 
 <script>
 	var btn = document.getElementById("convert");
-	var parameter = document.getElementById("params");
+	var parameters = document.getElementById("params");
 	var body = document.getElementById("script");
 	var pre = document.getElementById("output");
 	var script = "";
@@ -38,7 +43,7 @@ Are there any parameters required for your command?</textarea>
 	btn.addEventListener('click', function(e) {
 		script = body.value;
 		console.log(script);
-		params = parameter.value;
+		params = parameters.value;
 		try {
 			/*jslint evil: true */
 			var cmd = new Function(params, script);
@@ -53,7 +58,7 @@ Are there any parameters required for your command?</textarea>
 		pre.style.backgroundColor = "orange";
 
 		if (pre.textContent === "")
-			pre.textContent = "Did you mean to receive a response?";
+			pre.textContent = "Did you mean to receive a response? We don't catch any logs you might have made.";
 
 		setTimeout(function() {
 			pre.style.backgroundColor = "beige";
@@ -62,6 +67,8 @@ Are there any parameters required for your command?</textarea>
 </script>
 
 <script>
+	// Suggestion machine
+
 	// Global names for our dictionary
 	var terms = [];
 	for (var name in window) {

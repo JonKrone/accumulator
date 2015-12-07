@@ -25,6 +25,7 @@
 		For some reason our file could not display but you may be able to find it here.
 	</p>
 </iframe>
+<p id="iframeFile">Nothing on display</p>
 
 <script type="text/javascript">
 	var htmlRadio = document.getElementById("html");
@@ -49,8 +50,11 @@
 
 				for (var i = 0; i < fileList.length; i++) {
 					var option = document.createElement("option");
-					option.value = option.text = fileList[i];
-					option.setAttribute("data-path", fileList[i]);
+					option.value = fileList[i];
+					option.text = fileList[i].substring(
+						fileList[i].lastIndexOf("/") + 1,
+						fileList[i].lastIndexOf("."));
+
 					fileSelector.appendChild(option);
 				}
 			}
@@ -81,7 +85,8 @@
 		req.send();
 	}
 
-
+	// Update our iframe to display the currently selected project file. We ask the server
+	// for the html representation of our project by passing an encoded project url, throwing errors left // and right, and add a change listener to the file selector.
 	function loadCurrentFile() {
 		var req = new XMLHttpRequest();
 		var encodedFilePath = encodeURIComponent(fileSelector.value);
@@ -100,14 +105,11 @@
 		});
 		req.send();
 	}
-	fileSelector.addEventListener("change", loadCurrentFile); // might need to be positioned below loadCurrentFie function definition
+	fileSelector.addEventListener("change", function() {
+		loadCurrentFile();
+		document.getElementById("iframeFile").textContent = fileSelector.value;
+	});
 
-
-//	if GETrequest.contains(selector) return fileList.
-//	if ChangeView button.submitted return iframe.src = fileList.currentFile
-//
-// 
-//
 </script>
 
 <!--

@@ -3,7 +3,7 @@
   	background-color: #dddfd4;
   	color: #173e43;
 	}
-	iframe {
+	#page {
   	border-width: 2px;
   	border-right-style: none;
   	border-left-style: none;
@@ -15,13 +15,22 @@
   	margin: 0;
   }
 
-  select {
+  #iframeFile {
+  	color: #173e43;
+  	opacity: 0.7;
+  	font-style: italic;
+  	margin: 8px;
+
+  	float: right;
+  }
+
+  #selector {
   	border-radius: 4px;
   	height: 37px;
   	font-size: 1.3rem;
   }
-  select:hover {
-  	box-shadow: 0px 0px 30px 0px #173e43;
+  #selector:hover {
+  	box-shadow: 0px 0px 20px 0px #173e43;
   }
   option {
   	background-color: #dddfd4;

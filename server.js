@@ -13,17 +13,20 @@ app.set('views', __dirname + '/views');
 // set view engine to ejs
 app.set('view engine', 'ejs');
 
-// set home page route
+// set home page route to render our simple home page.
 app.get('/', function(request, response) {
-  response.render('culminator');
+  response.render('cumulator');
 });
 
+// GET requests to projectlist return a string that represents all of the files in public/projects
 app.get('/projectlist', function(request, response) {
 	var fileList = findFiles("public/projects/");
 
 	response.send(fileList);
 });
 
+// This route is used to return the full HTML document at the URI described by the query. Ugly query access I'm sure.
+// TODO:: remove public/projects from query (embed into findFiles)
 app.get('/projects', function(request, response) {
 	var projectLink = decodeURIComponent(request.url);
 	projectLink = projectLink.substring(projectLink.indexOf("?") + 1);
@@ -31,12 +34,10 @@ app.get('/projects', function(request, response) {
 	response.sendFile(projectLink, {root: __dirname});
 });
 
+// Beep boop boop beep
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-
-
-
 
 
 var fs = require('fs'), path = require('path');

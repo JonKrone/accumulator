@@ -1,0 +1,243 @@
+<style>
+	body {
+		height: 300px;
+		background: beige;
+		text-align: center
+	}
+	.dot {
+		height: 8px; width: 8px;
+		border-radius: 3px;
+		background: blue;
+		position: absolute;
+	}
+	button:hover {
+		background: skyblue;
+	}
+	.progress {
+		border: 1px solid blue;
+		width: 100px;
+		position: fixed;
+		top: 10px; right: 10px;
+	}
+	.progress > div {
+		height: 12px;
+		background: blue;
+		width: 2%;
+	}
+</style>
+<div class="progress"><div></div></div>
+<script>
+	var bar = document.querySelector(".progress div");
+	addEventListener("scroll", function(e) {
+		console.log(e);
+		var change = e.wheelDelta < 0 ? -3 : 3
+		if (bar.style.width.indexOf("100") > -1) change = -change;
+		var width = Number(bar.style.width.substring(0, bar.style.width.length - 1)) + change
+		bar.style.width = width + "%";
+	});
+</script>
+<h1 id="whatdowehavethisforagain">Fruit incoming!!</h1>
+<h2>hold the v key</h2>
+<script>
+	function tracker(e) {
+		if(e.target.tagName == "P") return;
+		console.log("WE'VE BEEN CLICKED!");
+		console.log(e.target);
+		if (e.which == 3) console.log("right button!");
+	}
+
+	addEventListener("click", function(e) {
+		var dot = document.createElement("div");
+		dot.className = "dot";
+		dot.style.left = (e.pageX - 4) + "px";
+		dot.style.top = (e.pageY - 4) + "px";
+		document.body.appendChild(dot);
+	});
+
+	var heading = document.querySelector("h1");
+	heading.addEventListener("click", function(e) {
+		console.log("whew, we missed that one.");
+		if (e.which == 2) removeEventListener("click", tracker);
+	});
+
+// This functionality of changing css on key press could be very useful to test styling
+	addEventListener("keydown", function(e) {
+		if (e.keyCode == 86) document.body.style.background = "violet";
+		console.log("Violet".charCodeAt(0));
+	});
+	addEventListener("keyup", function(e) {
+		if (e.keyCode == 86) document.body.style.background = "";
+	});
+	addEventListener("keypress", function(e) {
+		console.log(String.fromCharCode(e.charCode));
+	});
+</script>
+
+<p>A <button id="buttoned">buttoned</button> line.</p>
+<script>
+	var para = document.querySelector("p");
+	var button = document.getElementById("buttoned");
+	para.addEventListener("mousedown", function() {
+		console.log("triggered <p>");
+	});
+	button.addEventListener("mousedown", function(e) {
+		console.log("triggered <btn>");
+		if (e.which == 2) e.stopPropagation();
+	});
+</script>
+
+<label>Simple calculator</label>
+<input id="first" class="calc"></input>
+<button class="calc">+ </button>
+<input id="second" class="calc"> :: </input>
+<input id="answer" class="calc"></input>
+<script>
+	document.body.addEventListener("click", function(e) {
+		if (e.target.className == "calc" && e.target.nodeName == "BUTTON") {
+			var res = Number(document.getElementById("first").value) +
+								Number(document.getElementById("second").value);
+			console.log("calculated", res);
+			document.getElementById("answer").value = res;
+		}
+		e.stopPropagation();
+	});
+</script>
+
+<p>Street you were born on: <input class="stripper" type="text" data-help="Crystal"></p>
+<p>Name of your first dead pet: <input class="stripper" type="text" data-help="Sammy"></p>
+<p id="help"></p>
+<script>
+	var help = document.querySelector("#help");
+	var fields = document.querySelectorAll(".stripper");
+	for (var i = 0; i < fields.length; i++) {
+		fields[i].addEventListener("focus", function(e) {
+			var text = e.target.getAttribute("data-help");
+			help.textContent = text;
+		});
+		fields[i].addEventListener("blur", function(e) {
+			help.textContent = "";
+		});
+		fields[i].addEventListener("keypress", function(e) {
+			if (e.charCode == 13) 
+				help.textContent = e.target.value;
+		});
+	}
+</script>
+
+
+<div id="girth" align="center" style="background: orange; width: 222px; height: 20px">
+	Drag the bar to change its width
+</div>
+<script>
+	var lastX; // Last observed mouse position
+	var rect = document.getElementById("girth");
+	rect.addEventListener("mousedown", function(e) {
+		if (e.which == 1) {
+			lastX = e.pageX;
+			addEventListener("mousemove", moved);
+			e.preventDefault(); // Prevents selection
+		}
+	});
+
+	function buttonPressed(e) {
+		if (e.buttons == null) return e.which != 0;
+		else return e.buttons != 0;
+	}
+	function moved(e) {
+		if (!buttonPressed(e))
+			removeEventListener("mousemove", moved);
+		else {
+			var dist = e.pageX - lastX;
+			var newWidth = Math.max(10, rect.offsetWidth + dist);
+			var newHeight = Math.ceil((210 / newWidth)) * 20;
+			
+			rect.style.height = newHeight + "px";
+			rect.style.width = newWidth + "px";
+			lastX = e.pageX;
+		}
+	}
+
+	var para = document.getElementById("girth");
+	function isInside(node, target) {
+		for (; node != null; node = node.parentNode)
+			if (node == target) return true;
+	}
+
+	para.addEventListener("mouseover", function(e) {
+		if (!isInside(e.relatedTarget, para))
+			para.style.background = "pink"
+	});
+	para.addEventListener("mouseout", function(e) {
+		if (!isInside(e.relatedTarget, para))
+			para.style.background = "orange";
+	});
+</script>
+
+
+<footer>
+	<textarea>Wings or fins?</textarea>
+	<script>
+		var textArea = document.querySelector("textarea");
+		var timeout;
+		textArea.addEventListener("keydown", function(e) {
+			clearTimeout(timeout);
+			timeout = setTimeout(function() {
+				console.log("You stopped typing");
+			}, 500);
+		});
+
+		// Writes mouse coordinates to page every 25 ms
+		// function displayCoords(e) {
+		// 	document.body.textContent = "mouse at: (" + e.pageX + ", " + e.pageY + ")";
+		// }
+		// var scheduled = false, lastEvent;
+		// addEventListener("mousemove", function(e) {
+		// 	lastEvent = e;
+		// 	if (!scheduled) {
+		// 		scheduled = true;
+		// 		setTimeout(function() {
+		// 			scheduled = false;
+		// 			displayCoords(lastEvent);
+		// 		}, 25);
+		// 	}
+		// });
+
+	</script>
+	<br><a href="https://lemonparty.org">Clickbait party</a>
+
+	<br><br><span>Click below for dot-art</span>
+</footer>
+<script>
+	var link = document.querySelector("a");
+	link.addEventListener("click", function(e) {
+		console.log("No no no");
+		e.preventDefault();
+	});
+
+	// A worker is an isolated JS environment that runs alongside the main program and communicates
+	// only through messages
+	// var squareWorker = new Worker("code/squareworker.js");
+	// squareWorkers.addEventListener("message", function(e) {
+	// 	console.log("The worker responded:", e.data);
+	// });
+	// squareWorker.postMessage(10);
+	// squareWorker.postMessage(24);
+
+	document.body.style.background = "beige";
+	var bombTimer = setTimeout(function() {
+		document.getElementById("whatdowehavethisforagain").textContent = "Damn. Smack in the face by a tomatoe.";
+		document.body.style.background = "red";
+		clearInterval(clock);
+	}, 2000);
+
+	var ticks = 0;
+	var clock = setInterval(function() {
+		ticks++;
+		if (Math.random() < 0.1) {
+			clearTimeout(bombTimer);
+			clearInterval(clock);
+			document.getElementById("whatdowehavethisforagain").textContent = "Tomatoe dodged. High 5!";
+		} else
+			ticks % 2 == 0 ? console.log("tick") : console.log("tock");
+	}, 200);
+</script>

@@ -1,6 +1,13 @@
-<p align="center">Just normal, regular, totally unspectacular HTML.</p>
+<!-- Would changing opacity cause colors to blend?! -->
+
+<h4 align="center" style="font-size: 1.2rem">
+Just regular, normal totally unspectacular HTML.<br>
+<small style="font-size: 0.95rem">Tiny graphics alert</small>
+</h4>
+
 <!-- xmlns changes this svg element to a different XML namespace identified by the URL -->
-<svg xmlns="http://www.w3.org/2000/svg">
+<!-- SVG are vecotr based graphics -->
+<svg xmlns="http://www.w3.org/2000/svg" style="margin: auto; display: block;">
 	<circle r="50" cx="50" cy="50" fill="orange"/>
 	<rect x="120" y="5" width="99" height="99" stroke="purple" fill="none"/>
 </svg>
@@ -16,13 +23,16 @@
 	context.strokeStyle = "black";
 	context.strokeRect(0, 0, 220, 80);
 
+	// Fill black outlined rectangle with red
 	context.fillStyle = 'red';
 	context.fillRect(22, 15, 100, 50);
+
 
 	context.strokeStyle = "blue";
 	context.lineWidth = 4;
 	context.strokeRect(115, 5, 50, 50);
 
+	// Drawing horizontal magenta shutters
 	context.strokeStyle = "magenta";
 	context.beginPath();
 	for (var y = 10; y < 80; y += 10) {
@@ -36,6 +46,7 @@
 	context.strokeStyle = "blue";
 	context.strokeRect(5, 5, 50, 50);
 
+	// Peek-a-boo triangle
 	context.fillStyle = "DarkCyan";
 	context.beginPath();
 	context.moveTo(95, 55);
@@ -43,6 +54,7 @@
 	context.lineTo(125, 115);
 	context.fill();
 
+	// Weird triangle on the right
 	context.strokeStyle = "Magenta";
 	context.lineWidth = 2;
 	context.beginPath();
@@ -52,6 +64,7 @@
 	context.closePath();
 	context.stroke();
 
+	// El loop de loop
 	context.lineWidth = 1;
 	context.strokeStyle = "DarkCyan"
 	context.beginPath();
@@ -62,6 +75,7 @@
 	context.closePath();
 	context.stroke();
 
+	// Circle that gives us some fun intersections.
 	context.strokeStyle = "red";
 	context.beginPath();
 	context.arc(50, 50, 40, 0, 7);

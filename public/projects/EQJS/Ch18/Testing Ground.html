@@ -7,9 +7,12 @@
 	</style>
 <body>
 
+<h3>Dinkleburg's house of oddities</h3>
+<h4>Try clicking around and pressing keys. Just playing around, going through some exercises.</h4>
+
 <p><input type="text" value="abs" tabindex=1> (text)</p>
 <p><input type="password" value="abs" tabindex=2> (password)</p>
-<p><input id="boxed" type="checkbox" checked tabindex=3>
+<p><input id="boxed" type="checkbox" tabindex=3>
 		<label for="boxed" style="color: mediumpurple">Purple Page Processor</label></p>
 <p><input type="radio" value="A" name="choice" tabindex=4>
 	 <input type="radio" value="B" name="choice" checked tabindex=5>
@@ -21,15 +24,16 @@
 	<option>Breaded jello</option>
 	<option>Cutcakes</option>
 	<option>Sparkles</option>
+	<option>Sprinkles</option>
 	<option>Regret</option>
 </select>
 
 <script>
 	var active = document.querySelector("input");
 	active.focus();
-	console.log(document.activeElement.value);
+	console.log("Active element:", document.activeElement.value);
 	active.blur();
-	console.log(document.activeElement.tagName);
+	console.log("Active element after blur:", document.activeElement.tagName);
 
 	// Disabling some fieeeeeelds on other input. Hah, what about a game that has intricately interconnected
 	// fields that you need to untangle to enable a 'next level' button
@@ -72,32 +76,33 @@
 </script>
 
 <p></p>
-<form id="miter" action="NaJSf.js">
+<form id="miter">
 	Name: <input type="text" name="name"><br><p></p>
 	Password: <input type="password" name="password"><br><p></p>
-	<button type="submit">whatever</button>
+	<button type="submit">Save Name & Password</button>
 </form>
 <script>
  	var form = document.getElementById("miter");
 
  	form.addEventListener("submit", function(e) {
  		console.log("saving values", form.elements.value.value);
+ 		console.log("But not really because we don't want to keep them.");
  		e.preventDefault();
  	});
 
- 	console.log(form.elements[1].type);
- 	console.log(form.elements.password.type);
- 	console.log("name.form == form", form.elements.name.form == form);
- 	console.log("form.elements.name:", form.elements.name);
+ 	console.log("(password) form type:", form.elements[1].type);
+ 	console.log("verifying form type:", form.elements.password.type);
+ 	console.log("Ridonculus form.elements.name.form == form results in", form.elements.name.form == form);
+ 	console.log("Ridonculus form.elements.name:", form.elements.name);
 </script>
 
 <p></p>
-<p>Select some words and press 'k'</p>
-<textarea id="khasekhemwy">Hey boys! Let's go pick up girls!</textarea>
-<span id="length"></span>
+<p style="margin-bottom: 6px; margin-top: 20px;">Select some words and press 'k'</p>
+<textarea id="khasekhemwy" width="15%">Dirt gravel mud sand dust soil peat loam organic-matter stain secret</textarea>
+<span id="length"></span><br><br>
 <script>
-	var textArea = document.getElementById("khasekhemwy");
-	textArea.addEventListener('keydown', function(e) {
+	var textarea = document.getElementById("khasekhemwy");
+	textarea.addEventListener('keydown', function(e) {
 		if (e.keyCode == 75) {
 			console.log("replacing");
 			replaceSelection(textarea, "Khasekhemwy");
@@ -111,9 +116,9 @@
 	}
 
 	var numChars = document.getElementById("length");
-	numChars.textContent = " " + textArea.value.length + " CHARACTERS";
-	textArea.addEventListener('input', function(e) {
-		numChars.textContent = " " + textArea.value.length + " CHARACTERS";
+	numChars.textContent = " " + textarea.value.length + " chars";
+	textarea.addEventListener('input', function(e) {
+		numChars.textContent = " " + textarea.value.length + " chars";
 	});
 
 	var boxed = document.getElementById("boxed");
@@ -122,6 +127,7 @@
 	});
 </script>
 
+<small>Multi-select 4bit binary translator.</small>
 <select id="binbin" multiple>
   <option value="1">0001</option>
   <option value="2">0010</option>
