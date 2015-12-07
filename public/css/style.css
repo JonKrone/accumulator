@@ -38,3 +38,14 @@
   option {
   	background-color: #dddfd4;
   }
+
+
+  a {
+  	color: inherit;
+  }
+  #footer li {
+  	display: inline-block;
+  }
+  #middletoe:hover {
+  	background-color: orange;
+  }

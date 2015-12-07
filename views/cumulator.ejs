@@ -115,6 +115,35 @@
 
 </script>
 
+<footer>
+	<ul id="footer">
+		<li id="toe">
+			<a href="https://www.linkedin.com/in/jkrone" target="_blank">Who made this thing?</a>
+		</li>
+		<li id="middletoe" onmouseover="revealReason()" onmouseout="hideReason()">
+			Why did they make it?
+		</li>
+		<li id="toe">
+			<a href="https://github.com/JonKrone/accumulator" target="_blank">What's it made out of?</a>
+		</li>
+
+	</ul>
+</footer>
+
+<script>
+	var why = document.getElementById("middletoe");
+	// why.addEvenetListener("mouseover", revealReason);
+
+	var revealReason = function() {
+		why.textContent = "For fun and learning";
+	}
+
+	var hideReason = function() {
+		why.textContent = "Why did they make it?";
+	}
+
+</script>
+
 <!--
 A viewer for all of the webpages I have made.
 	Selector for the file

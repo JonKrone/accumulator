@@ -53,6 +53,10 @@
 		dot.style.top = (e.pageY - 4) + "px";
 		document.body.appendChild(dot);
 	});
+	addEventListener("dblclick", function(e) {
+		e.preventDefault();
+	});
+	
 
 	var heading = document.querySelector("h1");
 	heading.addEventListener("click", function(e) {
