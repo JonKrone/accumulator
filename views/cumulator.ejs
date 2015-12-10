@@ -6,6 +6,8 @@
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<script src="scripts/jquery-2.1.4.js"></script>
+
 	<h1>Which project would you like to view?</h1>
 
 
@@ -30,10 +32,8 @@
 <p id="iframeFile">Nothing on display</p>
 
 <script type="text/javascript">
-	var htmlRadio = document.getElementById("html");
-	var jsRadio = document.getElementById("js")
-	var iframe = document.getElementById("page");
-	var fileSelector = document.getElementById("selector");
+	var iframe = $("#page")[0];
+	var fileSelector = $("#selector");
 
 	function populateSelector() {
 		var request = new XMLHttpRequest();
@@ -48,16 +48,24 @@
 				var fileList = [];
 				request.responseText.split(",").forEach(function(file) {
 					fileList.push(file.replace(/"|\[|]/g, ""));
-				})
+				});
 
 				for (var i = 0; i < fileList.length; i++) {
-					var option = document.createElement("option");
-					option.value = fileList[i];
-					option.text = fileList[i].substring(
+					var option = $("<option/>", {
+						value: fileList[i],
+						text: fileList[i].substring(
 						fileList[i].lastIndexOf("/") + 1,
-						fileList[i].lastIndexOf("."));
+						fileList[i].lastIndexOf("."))
+					});
+					console.log(option);
 
-					fileSelector.appendChild(option);
+					// var option = document.createElement("option");
+					// option.value = fileList[i];
+					// option.text = fileList[i].substring(
+					// 	fileList[i].lastIndexOf("/") + 1,
+					// 	fileList[i].lastIndexOf("."));
+
+					fileSelector.append(option);
 				}
 			}
 		});
@@ -124,7 +132,6 @@ A viewer for all of the webpages I have made.
 		html
 		css
 		console output (always visible?)
-
 -->
 
 </body>

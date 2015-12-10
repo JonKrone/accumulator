@@ -39,6 +39,8 @@
 <h1 id="whatdowehavethisforagain">Fruit incoming!!</h1>
 <h2>press the v key to wipe</h2>
 <script>
+	throwTomato();
+
 	function tracker(e) {
 		if(e.target.tagName == "P") return;
 		console.log("WE'VE BEEN CLICKED!");
@@ -53,10 +55,6 @@
 		dot.style.top = (e.pageY - 4) + "px";
 		document.body.appendChild(dot);
 	});
-	addEventListener("dblclick", function(e) {
-		e.preventDefault();
-	});
-	
 
 	var heading = document.querySelector("h1");
 	heading.addEventListener("click", function(e) {
@@ -64,10 +62,16 @@
 		if (e.which == 2) removeEventListener("click", tracker);
 	});
 
+	var tomatoStatus = document.getElementById("whatdowehavethisforagain");
+
 // This functionality of changing css on key press could be very useful to test styling
 	addEventListener("keydown", function(e) {
-		if (e.keyCode == 86) document.body.style.background = "violet";
-		console.log("Violet".charCodeAt(0));
+		if (e.keyCode == 86) {
+			document.body.style.background = "darkslateblue";
+			throwTomato();
+			tomatoStatus.textContent = "Fruit incoming!!!";
+			console.log("throwing tomato");
+		}
 	});
 	addEventListener("keyup", function(e) {
 		if (e.keyCode == 86) document.body.style.background = "";
@@ -75,6 +79,31 @@
 	addEventListener("keypress", function(e) {
 		console.log(String.fromCharCode(e.charCode));
 	});
+
+	var tomatoIncoming = false;
+	function throwTomato () {
+		if (tomatoIncoming) return;
+		tomatoIncoming = true;  
+
+		var tomatoTimer = setTimeout(function() {
+			tomatoStatus.textContent = "Damn. Smacked in the face with a tomato.";
+			document.body.style.background = "tomato";
+			clearInterval(clock);
+			tomatoIncoming = false;
+		}, 2000);
+
+		var ticks = 0;
+		var clock = setInterval(function() {
+			ticks++;
+			if (Math.random() < 0.05) {
+				clearTimeout(tomatoTimer);
+				clearInterval(clock);
+				tomatoStatus.textContent = "Nice! Tomato dodged! High 5!";
+				tomatoIncoming = false;
+			} else
+				ticks % 2 == 0 ? console.log("tick") : console.log("tock");
+		}, 200);
+	}
 </script>
 
 <hr width="60%"><small>Below we're just messing with functionality.</small>
@@ -110,22 +139,21 @@
 
 <p>Street you were born on: <input class="stripper" type="text" data-help="Crystal"></p>
 <p>Name of your first dead pet: <input class="stripper" type="text" data-help="Sammy"></p>
-<p id="help"></p>
+<p>Love worker name: <span id="help"></span></p>
 <script>
 	var help = document.querySelector("#help");
 	var fields = document.querySelectorAll(".stripper");
+	help.textContent = fields[1].getAttribute("data-help") + " " + fields[0].getAttribute("data-help");
+
 	for (var i = 0; i < fields.length; i++) {
-		fields[i].addEventListener("focus", function(e) {
-			var text = e.target.getAttribute("data-help");
-			help.textContent = text;
-		});
-		fields[i].addEventListener("blur", function(e) {
-			help.textContent = "";
-		});
 		fields[i].addEventListener("keypress", function(e) {
-			if (e.charCode == 13) 
-				help.textContent = e.target.value;
+			if (e.charCode == 13)
+				help.textContent = genName(fields);
 		});
+	}
+
+	function genName(fields) {
+		return fields[1].value + " " + fields[0].value;
 	}
 </script>
 
@@ -227,21 +255,4 @@
 	// });
 	// squareWorker.postMessage(10);
 	// squareWorker.postMessage(24);
-
-	var bombTimer = setTimeout(function() {
-		document.getElementById("whatdowehavethisforagain").textContent = "Damn. Smacked in the face with a tomato.";
-		document.body.style.background = "tomato";
-		clearInterval(clock);
-	}, 2000);
-
-	var ticks = 0;
-	var clock = setInterval(function() {
-		ticks++;
-		if (Math.random() < 0.075) {
-			clearTimeout(bombTimer);
-			clearInterval(clock);
-			document.getElementById("whatdowehavethisforagain").textContent = "Nice! Tomato dodged! High 5!";
-		} else
-			ticks % 2 == 0 ? console.log("tick") : console.log("tock");
-	}, 200);
 </script>
