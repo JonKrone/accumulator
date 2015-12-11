@@ -2,7 +2,7 @@ var fs = require('fs'), path = require('path');
 
 var express = require('express');
 var app = express();
-var PROJECT_PATH = "public/projects/";
+var PROJECT_PATH = 'public/projects/';
 
 // Setting port property. env.PORT is online port while 5555 is default localhost
 app.set('port', (process.env.PORT || 5555));
@@ -24,20 +24,22 @@ app.get('/', function(request, response) {
 // GET requests to projectlist return a string that represents all of the files in public/projects
 app.get('/projectlist', function(request, response) {
 	var fileList = findProjectFiles();
-	fileList.forEach(function(filepath) {
-		filepath = filepath.replace('public/projects/', "");
+	fileList = fileList.map(function(filepath) {
+		return filepath.replace(PROJECT_PATH, '');
 	});
-	response.send(fileList);
+
+	response.json(fileList);
 });
 
 // This route is used to return the full HTML document at the URI described by the query. Ugly query access I'm sure.
 // TODO:: remove public/projects from query (embed into findFiles)
 app.get('/projects', function(request, response) {
 
-	var projectLink = decodeURIComponent(request.query.remotePath);
-	var project = fs.readFileSync(projectLink, 'utf8');
+	var projectLink = PROJECT_PATH + decodeURIComponent(request.query.remotePath);
+	var projectHTML = fs.readFileSync(projectLink, 'utf8');
 
-	response.status(200).json({htmlSource: project, javascriptSource: null});
+	response.status(200).json({ htmlSource: projectHTML,
+															javascriptSource: null});
 });
 
 // Beep boop boop beep
@@ -54,11 +56,11 @@ var projectFiles = []; // I know I shouldn't be defining a variable outside of a
 // compute the tree into a selection list
 function findProjectFiles(pathRoot) {
 	if (pathRoot === undefined) {
-		pathRoot = "public/projects/";
+		pathRoot = 'public/projects/';
 	}
 
 	if (!fs.existsSync(pathRoot))
-		throw new Error("Attempting to dive into a path that does not exist" + pathRoot);
+		throw new Error('Attempting to dive into a path that does not exist' + pathRoot);
 
 	var fileDir = fs.readdirSync(pathRoot);
 	for (var i = 0; i < fileDir.length; i++) {
@@ -69,13 +71,9 @@ function findProjectFiles(pathRoot) {
 			// If directory, insert unclickable option in select list declaring the file dir
 			findProjectFiles(filename);
 		else {
-			// console.log("filename:", filename);
 			if (projectFiles.indexOf(filename) == -1) projectFiles.push(filename);
 		}
 	}
 
 	return projectFiles;
 }
-
-
-

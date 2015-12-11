@@ -1,139 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
+	<meta charset='UTF-8'>
 	<title>prototype accumulator</title>
-	<link rel="stylesheet" href="css/style.css">
+	<link rel='stylesheet' href='css/style.css'>
 </head>
 <body>
-<script src="scripts/jquery-2.1.4.js"></script>
+	<script src='scripts/jquery-2.1.4.js'></script>
 
 	<h1>Which project would you like to view?</h1>
 
 
 <form>
-	<select id="selector">
-		<option selected="selected"><--- Select ---></option>
+	<select id='selector'>
+		<option selected='selected' disabled><--- Select ---></option>
 	</select>
-<!-- 	<input id="html" type="radio" name="html" value="HTML" text="HTML">
-	<input id="js" type="radio" name="js" value="JavaScript" text="HTML"> -->
+<!-- 	<input id='html' type='radio' name='html' value='HTML' text='HTML'>
+	<input id='js' type='radio' name='js' value='JavaScript' text='HTML'> -->
 </form>
 
 <br>
-<iframe
-	id="page"
-	width="100%" height="1000px"
-	> <!-- Doing what we were told never to do sandbox="allow-scripts allow-same-origin"
-				  google onload="resizeFrame(this)" iframe to dynamically size -->
-	<p>
-		For some reason our file could not display but you may be able to find it here.
-	</p>
-</iframe>
-<p id="iframeFile">Nothing on display</p>
-
-<script type="text/javascript">
-	var iframe = $("#page")[0];
-	var fileSelector = $("#selector");
-
-	function populateSelector() {
-		var PROJECT_PATH = 'public/projects/';
-
-		var request = new XMLHttpRequest();
-		request.open("GET", "projectList/", true);
-
-		request.addEventListener("load", function() {
-			if (request.status >= 400) {
-				console.log(request.status);
-				throw new Error("Failed to load projects list");
-			}
-			else {
-				// Institute a preferred project order?
-				// Handle response from our request for all projects.
-
-				// Change server to send a JSON filepath without public/projects 
-				var fileList = [];
-				request.responseText.split(",").forEach(function(file) {
-					var filepath = file.replace(/"|\[|]/g, "");
-					// filepath.replace(PROJECT_PATH, "");
-
-					fileList.push(filepath);
-				});
-
-				for (var i = 0; i < fileList.length; i++) {
-					var option = $("<option/>", {
-						value: fileList[i],
-						text: fileList[i].substring(
-						fileList[i].lastIndexOf("/") + 1,
-						fileList[i].lastIndexOf("."))
-					});
-
-					fileSelector.append(option);
-				}
-			}
-		});
-		request.addEventListener("error", function() {
-			throw new Error("Network error");
-		});
-		request.send();
-	}
-	populateSelector();
 
 
-	function request(options, callback) {
-		var req = new XMLHttpRequest();
-		var params = encodeURIComponent(options.filename);
-		console.log(params);
-		req.open(options.method || "GET", options.url + "?" + params, true);
 
-		req.addEventListener("load", function() {
-			if (req.status < 400)
-				callback(null, req.responseText);
-			else
-				callback(new Error("Request failed: " + req.statusText));
-		});
-		req.addEventListener("error", function() {
-			callback(new Error("Network error"));
-		});
-		req.send();
-	}
+<div width='100%'>
+  <% include sourceTabs.ejs %>
 
-	// Update our iframe to display the currently selected project file. We ask the server
-	// for the html representation of our project by passing an encoded project url, throwing errors left
-	// and right, and add a change listener to the file selector.
-	//
-	// We're using AJAX to handle requests + responses on the client side.
-	function loadFile(file) {
-		console.log("loading project: ", file);
-		var encodedFilepath = encodeURIComponent(file);
+	<p id='iframeFile'>Nothing on display</p>
+</div>
 
-		var onSuccess = function (result, status) {
-			console.log("ever called?");
-			if (status != 'success') {
-				throw new Error("Mistake loading project file\nRequest status: " + status);
-			}
-			else {
-				console.log("result from getJSON: ", result);
-				iframe.contentWindow.document.open();
-				iframe.contentWindow.document.write(result.htmlSource);
-				// source[html] = result.htmlSource;
-				// source[javascript] = result.javascriptSource;
-			}
-		};
-
-		$.getJSON('projects/',
-							{ remotePath: encodedFilepath },
-							onSuccess);
-	}
-
-	fileSelector.on("change", function() {
-		var selectedFile = $('#selector option:selected').attr('value');
-		loadFile(selectedFile);
-		$("#iframeFile").text(selectedFile);
-
-		$(iframe).focus();
-	});
-
-</script>
 
 <% include footer.ejs %>
 
@@ -145,6 +40,23 @@ A viewer for all of the webpages I have made.
 		css
 		console output (always visible?)
 -->
+
+<!--  RESIZABLE IFRAME
+ <iframe src='' width='100%' id='idIframe' onload='autoResize('idIframe');' ></iframe>     
+ function autoResize(id)
+ {
+     var newheight;
+     var newwidth;
+     if(document.getElementById)
+     {
+         newheight=document.getElementById(id).contentWindow.document .body.scrollHeight;
+         newwidth=document.getElementById(id).contentWindow.document .body.scrollWidth;
+     }
+     document.getElementById(id).height= (newheight) + 'px';
+     document.getElementById(id).width= (newwidth) + 'px';
+ }
+ -->
+<script type='text/javascript' src='scripts/projectLoader.js'></script>
 
 </body>
 </html>

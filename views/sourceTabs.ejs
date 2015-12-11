@@ -1,0 +1,43 @@
+<div class='tab' id='DOC-tab' data-content='DOC'>Document</div>
+<div class='tab' id='HTML-tab' data-content='HTML'>HTML source</div>
+<div class='tab' id='JS-tab' data-content='JS'>Javascript source</div>
+
+<div id='display'>
+	<iframe
+		class='content'
+		id='DOC'
+		width='100%' height='1000px'
+		> <!-- Doing what we were told never to do sandbox='allow-scripts allow-same-origin'
+					  google onload='resizeFrame(this)' iframe to dynamically size -->
+		<p>
+			For some reason our file could not display but you may be able to find it here.
+		</p>
+	</iframe>
+
+	<textarea class='content' id='HTML'></textarea>
+	<textarea class='content' id='JS'></textarea>
+</div>
+
+<script>
+	var sourceTabs = $('div .tab');
+	var contentAreas = $('.content');
+
+	// $.each(sourceTabs, function(tab) {
+	// 	console.log('tab:', sourceTabs[tab]);
+	// 	$(sourceTabs[tab]).on('click', display($(sourceTabs[tab]).attr('id')));
+	// });
+
+	sourceTabs.click(function() {
+		contentAreas.hide();
+
+		$('#' + $(this).data('content')).show();
+	});
+
+
+	$(document).ready(function() {
+		$('#DOC-tab').trigger('click');
+	});
+
+</script>
+
+
