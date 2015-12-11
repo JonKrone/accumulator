@@ -5,18 +5,16 @@ var fileSelector = $('#selector');
 // We use AJAX to ask for a JSON file of our projects. We parse the response to fill the select with options
 // with values that serve as the server file path and text that represents project file names.
 function populateSelector() {
-	// Institute a preferred project order?
-	// Handle response from our request for all projects.
+	// Institute a preferred project order
+	// 
 
 	var onSuccess = function (result, status) {
 		if (status != 'success') {
 			throw new Error('Mistake loading project list\nRequest status: ' + status);
 		}
 		else {
-			console.log("Project list:", result);
 
 			for (var i = 0; i < result.length; i++) {
-				console.log(result[i]);
 
 				var option = $('<option/>', {
 					value: result[i],
