@@ -1,45 +1,37 @@
 var iframe = $('#DOC')[0];
 var fileSelector = $('#selector');
 
+// We are populating the select tag with all of the projects found on the server.
+// We use AJAX to ask for a JSON file of our projects. We parse the response to fill the select with options
+// with values that serve as the server file path and text that represents project file names.
 function populateSelector() {
+	// Institute a preferred project order?
+	// Handle response from our request for all projects.
 
-	var request = new XMLHttpRequest();
-	request.open('GET', 'projectList/', true);
-
-	request.addEventListener('load', function() {
-		if (request.status >= 400) {
-			console.log(request.status);
-			throw new Error('Failed to load projects list');
+	var onSuccess = function (result, status) {
+		if (status != 'success') {
+			throw new Error('Mistake loading project list\nRequest status: ' + status);
 		}
 		else {
-			// Institute a preferred project order?
-			// Handle response from our request for all projects.
+			console.log("Project list:", result);
 
-			// Change server to send a JSON filepath without public/projects 
-			// forEach loop is only there to remove quotes. Look to remove this through JSON parsing
-			var fileList = [];
-			request.responseText.split(',').forEach(function(filepath) {
-				fileList.push(filepath.replace(/"/g, ''));
-			});
-			// fileList = request.responseText.split(',');
+			for (var i = 0; i < result.length; i++) {
+				console.log(result[i]);
 
-
-			for (var i = 0; i < fileList.length; i++) {
 				var option = $('<option/>', {
-					value: fileList[i],
-					text: fileList[i].substring(
-					fileList[i].lastIndexOf('/') + 1,
-					fileList[i].lastIndexOf('.'))
+					value: result[i],
+					text: result[i].substring(
+					result[i].lastIndexOf('/') + 1,
+					result[i].lastIndexOf('.'))
 				});
-
 				fileSelector.append(option);
 			}
 		}
-	});
-	request.addEventListener('error', function() {
-		throw new Error('Network error');
-	});
-	request.send();
+	};
+
+	$.getJSON('projectList/',
+						{},
+						onSuccess);
 }
 populateSelector();
 
