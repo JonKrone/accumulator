@@ -28,7 +28,49 @@
 	<option>Regret</option>
 </select>
 
+
+<ul id="menu">
+  <li id="link-1"><a href="/">Homepage</a></li>
+  <li id="link-2"><a href="/projects">Projects</a></li>
+  <li id="link-3"><a href="/blog">Blog</a></li>
+  <li id="link-4"><a href="/about">About</a></li>
+</ul>
+
+<div id="message"><p>Your current balance is <b>$1000</b></p></div>
+<img src="tester.jpg" alt="Alternative text">
+
+<script src="jquery-2.1.4.js"></script>
 <script>
+// Also works: jQuery('div > p').find('b').html('$2000') 
+jQuery('#message').find('b').html('$2000');
+
+console.log( $('#menu > li').index($('#link-3')) );
+
+
+var myElement = jQuery('img[alt]');
+console.log("img[alt]:", myElement);
+console.log("get(-1):", myElement.get(-1));
+console.log("typeof:", typeof myElement.get(-1));
+
+// Using jQuery to add click handlers to all of our options.
+var my_handlers = function (nodes) {
+  var helper = function (i) {
+    return function (e) { alert(i); };
+  };
+  var x;
+  for (x = 0; x < nodes.length; x++) {
+  	console.log("Adding click handler to:", nodes[x]);
+    $(nodes[x]).on("click", helper(x));
+  }
+};
+
+my_handlers($( "option" ));
+
+</script>
+<script>
+
+
+
 	var active = document.querySelector("input");
 	active.focus();
 	console.log("Active element:", document.activeElement.value);
