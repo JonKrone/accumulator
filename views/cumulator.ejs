@@ -36,6 +36,8 @@
 	var fileSelector = $("#selector");
 
 	function populateSelector() {
+		var PROJECT_PATH = 'public/projects/';
+
 		var request = new XMLHttpRequest();
 		request.open("GET", "projectList/", true);
 
@@ -45,9 +47,16 @@
 				throw new Error("Failed to load projects list");
 			}
 			else {
+				// Institute a preferred project order?
+				// Handle response from our request for all projects.
+
+				// Change server to send a JSON filepath without public/projects 
 				var fileList = [];
 				request.responseText.split(",").forEach(function(file) {
-					fileList.push(file.replace(/"|\[|]/g, ""));
+					var filepath = file.replace(/"|\[|]/g, "");
+					// filepath.replace(PROJECT_PATH, "");
+
+					fileList.push(filepath);
 				});
 
 				for (var i = 0; i < fileList.length; i++) {
@@ -57,13 +66,6 @@
 						fileList[i].lastIndexOf("/") + 1,
 						fileList[i].lastIndexOf("."))
 					});
-					console.log(option);
-
-					// var option = document.createElement("option");
-					// option.value = fileList[i];
-					// option.text = fileList[i].substring(
-					// 	fileList[i].lastIndexOf("/") + 1,
-					// 	fileList[i].lastIndexOf("."));
 
 					fileSelector.append(option);
 				}
@@ -96,29 +98,39 @@
 	}
 
 	// Update our iframe to display the currently selected project file. We ask the server
-	// for the html representation of our project by passing an encoded project url, throwing errors left // and right, and add a change listener to the file selector.
-	function loadCurrentFile() {
-		var req = new XMLHttpRequest();
-		var encodedFilePath = encodeURIComponent(fileSelector.value);
-		req.open("GET", "/projects" + "?" + encodedFilePath, true);
+	// for the html representation of our project by passing an encoded project url, throwing errors left
+	// and right, and add a change listener to the file selector.
+	//
+	// We're using AJAX to handle requests + responses on the client side.
+	function loadFile(file) {
+		console.log("loading project: ", file);
+		var encodedFilepath = encodeURIComponent(file);
 
-		req.addEventListener("load", function() {
-			if (req.status >= 400)
-				throw new Error("Mistake loading project file.\n" + req.statusText);
-			else {
-				iframe.contentWindow.document.open();
-				iframe.contentWindow.document.write(req.responseText);
+		var onSuccess = function (result, status) {
+			console.log("ever called?");
+			if (status != 'success') {
+				throw new Error("Mistake loading project file\nRequest status: " + status);
 			}
-		});
-		req.addEventListener("error", function() {
-			throw new Error("Network error");
-		});
-		req.send();
+			else {
+				console.log("result from getJSON: ", result);
+				iframe.contentWindow.document.open();
+				iframe.contentWindow.document.write(result.htmlSource);
+				// source[html] = result.htmlSource;
+				// source[javascript] = result.javascriptSource;
+			}
+		};
+
+		$.getJSON('projects/',
+							{ remotePath: encodedFilepath },
+							onSuccess);
 	}
-	fileSelector.addEventListener("change", function() {
-		loadCurrentFile();
-		document.getElementById("iframeFile").textContent = fileSelector.value;
-		document.getElementById("page").focus();
+
+	fileSelector.on("change", function() {
+		var selectedFile = $('#selector option:selected').attr('value');
+		loadFile(selectedFile);
+		$("#iframeFile").text(selectedFile);
+
+		$(iframe).focus();
 	});
 
 </script>
